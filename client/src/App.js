@@ -1,4 +1,3 @@
-import './App.css';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import LandingPage from './components/LandingPage/LandingPage';
 import NavBar from './components/NavBar/NavBar';
@@ -9,13 +8,14 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <NavBar />
         <Routes>
-          <Route path="/" element={<LandingPage/>}/>
-          <Route path='/home' element={<Home/>}/>
-          <Route path='/recipe'>
-            <Route path='/recipe/:id' element={<Recipe />} />
-            <Route path='/recipe/create' element={<CreateRecipe />} />
+          <Route exact path="/" element={<LandingPage/>}/>
+          <Route path='/' element={<NavBar />}>
+            <Route path='home' element={<Home/>}/>
+            <Route path='recipe'>
+              <Route path='create' element={<CreateRecipe />} />
+              <Route path=':id' element={<Recipe />} />
+            </Route>
           </Route>
         </Routes>
       </div>
