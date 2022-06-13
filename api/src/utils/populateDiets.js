@@ -1,11 +1,18 @@
+const {getApiRecipes} = require('../utils/recipesUtils')
 const {Diet} = require('../db.js');
 
-const diets = ["Gluten Free", "Ketogenic", "Vegetarian", "Lacto-Vegetarian", "Ovo-Vegetarian", "Vegan", "Pescetarian", "Paleo", "Primal", "Whole30"];
 
 module.exports = async function populateDiets() {
-    await Promise.all(diets.map(async diet => {
-        await Diet.create({
-            name: diet
-        })
-    }))
+    const recipes = await getApiRecipes()
+    const diets = recipes.reduce((acc, recipe) => {
+        if(recipe.diets){
+            recipe.diets.forEach(diet => {
+                if(!acc.includes(diet)){
+                    acc.push(diet)
+                }
+            })
+        }
+        return acc;
+    }, [])
+    await Diet.bulkCreate(diets.map(diet => ({name: diet})));
 }
