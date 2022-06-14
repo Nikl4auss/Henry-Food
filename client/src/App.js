@@ -2,7 +2,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import LandingPage from './components/LandingPage/LandingPage';
 import NavBar from './components/NavBar/NavBar';
 import Home from './components/Home/Home';
-import Recipe from './components/Recipe/Recipe';
+import Recipe from './components/Recipe/RecipeDetail/RecipeDetail';
 import CreateRecipe from './components/CreateRecipe/CreateRecipe';
 function App() {
   return (

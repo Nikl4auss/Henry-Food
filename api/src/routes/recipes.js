@@ -1,24 +1,19 @@
 const recipesRouter = require('express').Router();
 const axios = require('axios');
 const { Recipe, Diet } = require('../db');
+const { getApiRecipes, getDBRecipes } = require('../utils/recipesUtils');
 const {API_KEY} = require('../utils/config');
 
 recipesRouter.get('/', async (req, res) => {
-    
-    const {name} = req.query
+    const queryParams = Object.keys(req.query);
+    console.log("query", req.query)
     let recipes = []
-    const url = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`;
     
     try {
-        const {data} = await axios.get(url);
-        recipes.push(...data.results);
-        const dbRecipes = await Recipe.findAll({
-            include: [{
-                model: Diet,
-                as: 'diets',
-                attributes: ['name']
-            }]
-        });
+        console.log('You are here')
+        const apiRecipes = await getApiRecipes();
+        recipes.push(...apiRecipes);
+        const dbRecipes = await getDBRecipes();
         recipes.push(...dbRecipes);
         recipes = recipes.map(recipe => {
             if(recipe.analyzedInstructions?.length){
@@ -37,10 +32,19 @@ recipesRouter.get('/', async (req, res) => {
             }
         }) 
 
-        if(name){
-            let filteredRecipes = recipes.filter(recipe => recipe.title.toLowerCase().includes(name.toLowerCase()))
-            return res.status(200).json(filteredRecipes);
+        if(queryParams.length){
+            recipes = recipes.filter(recipe => {
+                return queryParams.every(param => {
+                    if(Array.isArray(recipe[param])){
+                        return recipe[param].some(item => req.query[param].includes(item))
+                    }
+                    if(typeof recipe[param] === 'string'){
+                        return recipe[param].toLowerCase().includes(req.query[param].toLowerCase())
+                    }
+                })
+            })
         }
+
         return res.status(200).json(recipes);
     } catch (error) {
         console.log(error)
