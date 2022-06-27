@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 
 import RecipeCard from '../Recipe/RecipeCard/RecipeCard'
@@ -9,23 +9,29 @@ import { sortRecipes } from '../../redux/recipes/recipesSlice'
 import styles from './Recipes.module.css'
 
 function Recipes() {
-  const recipes = useSelector(state => state.recipes.recipes)
+  const {recipes, isLoading} = useSelector(state => state.recipes)
   const dispatch = useDispatch()
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [sortValue, setSortValue] = useState('title')
   const [currentPage, setCurrentPage] = useState(1)
   const recipesPerPage = 9
-  const totalPages = Math.ceil(recipes.length / recipesPerPage)
+  const totalPages = Math.ceil(recipes?.length / recipesPerPage) || 0
   const sortParams = ['title', 'points', 'healthScore']
 
-  function sortBy(value) {
+  
+  function sortBy(value){
     dispatch(sortRecipes(value))
+    setCurrentPage(1)
   }
 
+
   useEffect(() => {
-    sortBy(sortValue)
-  }, [sortBy, sortValue])
+    if(recipes.length){
+      dispatch(sortRecipes('title'))
+      setCurrentPage(1)
+    }
+  }, [dispatch, recipes])
   return (
     <div className={styles.container}>
       <div className={styles.menu}>
@@ -72,10 +78,17 @@ function Recipes() {
                   )
                 })}
               </div>
-              <Pagination setCurrentPage={setCurrentPage} totalPages={totalPages}/>
+              <Pagination setCurrentPage={setCurrentPage} totalPages={totalPages} currentPage={currentPage}/>
             </>
           )
-          : <p>No recipes found</p>
+          : 
+          isLoading ? (
+            <>
+              <p>...Loading</p>
+            </>
+          )
+          :
+          <p>No recipes found</p>
         }
     </div>
   )
