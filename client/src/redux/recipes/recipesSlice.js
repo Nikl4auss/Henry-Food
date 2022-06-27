@@ -35,14 +35,29 @@ export const recipesSlice = createSlice({
             console.log('here')
             if(state.recipes?.length){
                 state.recipes.sort((recipe1, recipe2) => {
-                    if(action.payload === "title"){
-                        return recipe1.title.localeCompare(recipe2.title);
+                    if(action.payload.direction === 'asc'){
+                        if(action.payload.value === "title"){
+                            return recipe1.title.localeCompare(recipe2.title);
+                        }
+                        else if(action.payload === "points"){
+                            return recipe1.points - recipe2.points;
+                        }
+                        else if(action.payload === "healthScore"){
+                            return recipe1.healthScore - recipe2.healthScore;
+                        }
+                        return 0
                     }
-                    else if(action.payload === "points"){
-                        return recipe1.points - recipe2.points;
-                    }
-                    else if(action.payload === "healthScore"){
-                        return recipe1.healthScore - recipe2.healthScore;
+                    else if(action.payload.direction === 'desc'){
+                        if(action.payload.value === "title"){
+                            return recipe2.title.localeCompare(recipe1.title);
+                        }
+                        else if(action.payload === "points"){
+                            return recipe2.points - recipe1.points;
+                        }
+                        else if(action.payload === "healthScore"){
+                            return recipe2.healthScore - recipe1.healthScore;
+                        }
+                        return 0
                     }
                     return 0
                 })
