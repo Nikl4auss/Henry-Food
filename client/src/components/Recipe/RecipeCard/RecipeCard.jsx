@@ -1,26 +1,29 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import styles from './RecipeCard.module.css'
+
 function RecipeCard({id, title, image ,diets, dishes}) {
   const navigate = useNavigate()
   return (
-    <div onClick={() => navigate(`/recipe/:${id}`)}>
-        <p>{title}</p>
-        <img src={image} alt={title}/>
-        <p>Diets</p>
+    <div className={styles.container} onClick={() => navigate(`/recipe/:${id}`)}>
+        <img className={styles.img} src={image} alt={title}/>
+        <p className={styles.title}>{title}</p>
+        <p className={styles.info_name}>Diets</p>
         {diets.length 
           ? (
-            <ul>
-              {diets?.map((diet, inx) => <li key={inx}>{diet}</li>)}
+            <ul className={styles.info_params}>
+              {diets?.map((diet, inx) => <li className={styles.info_param} key={inx}>{diet}</li>)}
             </ul>
           )
           : <p>No diets information</p>
         }
         
-        <p>Dishes</p>
+        <p className={styles.info_name}>Dishes</p>
         {dishes.length
           ? (
-            <ul>
-              {dishes?.map((dish, inx) => <li key={inx}>{dish}</li>)}
+            <ul className={styles.info_params}>
+              {dishes?.map((dish, inx) => <li key={inx} className={styles.info_param}>{dish}</li>)}
             </ul>
           )
           : <p>No dishes information</p>

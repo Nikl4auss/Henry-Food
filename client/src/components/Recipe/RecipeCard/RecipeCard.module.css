@@ -1,0 +1,47 @@
+.container {
+    border: 1px solid #e6e6e6;
+    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 10%;
+    overflow: hidden;
+    background-color: #ececec;
+    transition: all .5s ease-in-out;
+}
+
+.container:hover {
+    cursor: pointer;
+    background-color: #c5c5c5;
+}
+
+.img {
+    width: 100%;
+}
+
+.title, .info_name{
+    margin-left: 1rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.info_name {
+    font-size: 1.4rem;
+}
+
+.info_params {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .5rem;
+    list-style: none;
+}
+
+.info_param {
+    font-size: 1.2rem;
+    color: #444444;
+    background-color: #CCFF66;
+    padding: .2rem 1rem;
+    border-radius: 40%;
+}
