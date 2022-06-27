@@ -30,6 +30,21 @@ export const recipesSlice = createSlice({
         addRecipe: (state, action) => {
             state.recipes.push(action.payload);
         },
+        sortRecipes: (state, action) => {
+            state.recipes.sort((recipe1, recipe2) => {
+                if(action.payload === "title"){
+                    return recipe1.title.localeCompare(recipe2.title);
+                }
+                else if(action.payload === "points"){
+                    return recipe1.points - recipe2.points;
+                }
+                else if(action.payload === "healthScore"){
+                    return recipe1.healthScore - recipe2.healthScore;
+                }
+                return 0
+            })
+        }
+        ,
         setCurrentRecipe: (state, action) => {
             state.currentRecipe = action.payload;
         },
@@ -42,7 +57,7 @@ export const recipesSlice = createSlice({
     }
 }) 
 
-export const { setRecipes, addRecipe, setCurrentRecipe, setDiets, setDishes } = recipesSlice.actions;
+export const { setRecipes, addRecipe, sortRecipes,setCurrentRecipe, setDiets, setDishes } = recipesSlice.actions;
 
 export function getRecipes(filters = {}) {
     return async dispatch => {
@@ -53,6 +68,10 @@ export function getRecipes(filters = {}) {
             console.log(error)
         }
     }
+}
+
+export function orderRecipesBy(param){
+
 }
 
 export function getDiets(){
