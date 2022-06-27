@@ -1,39 +1,24 @@
 const recipesRouter = require('express').Router();
 const axios = require('axios');
 const { Recipe, Diet } = require('../db');
-const { getApiRecipes, getDBRecipes } = require('../utils/recipesUtils');
+const { getApiRecipes, getDBRecipes, restructureRecipes, restrucutreRecipe } = require('../utils/recipesUtils');
 const {API_KEY} = require('../utils/config');
+
+const recipes = [];
 
 recipesRouter.get('/', async (req, res) => {
     const queryParams = Object.keys(req.query);
-    console.log("query", req.query)
-    let recipes = []
-    
+    console.log("query", req.query)    
     try {
-        console.log('You are here')
+        if(recipes.length === 0){
         const apiRecipes = await getApiRecipes();
         recipes.push(...apiRecipes);
         const dbRecipes = await getDBRecipes();
         recipes.push(...dbRecipes);
-        recipes = recipes.map(recipe => {
-            if(recipe.analyzedInstructions?.length){
-                recipe.instructions = recipe.analyzedInstructions[0].steps.map(step => step.step).join('\n');
-            }
-            return {
-                id: recipe.id,
-                title: recipe.title,
-                summary: recipe.summary,
-                points: recipe.aggregateLikes,
-                healthScore: recipe.healthScore,
-                instructions: recipe.instructions,
-                image: recipe.image,
-                diets: recipe.diets,
-                dishes: recipe.dishTypes|| recipe.dishes
-            }
-        }) 
-
+        }
+        let strucutredRecipes = restructureRecipes(recipes);
         if(queryParams.length){
-            recipes = recipes.filter(recipe => {
+            strucutredRecipes = strucutredRecipes.filter(recipe => {
                 return queryParams.every(param => {
                     if(Array.isArray(recipe[param])){
                         return recipe[param].some(item => req.query[param].includes(item))
@@ -45,7 +30,7 @@ recipesRouter.get('/', async (req, res) => {
             })
         }
 
-        return res.status(200).json(recipes);
+        return res.status(200).json(strucutredRecipes);
     } catch (error) {
         console.log(error)
         return res.status(500).send('Could not get recipes')
@@ -60,12 +45,13 @@ recipesRouter.get('/:idRecipe', async (req, res) => {
             if(Number(idRecipe)){
                 const url = `https://api.spoonacular.com/recipes/${idRecipe}/information?apiKey=${API_KEY}`;
                 const {data} = await axios.get(url)
-                return res.json(data)
+
+                return res.json(restrucutreRecipe(data));
             }
             if(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(idRecipe)){
                 const recipe = await Recipe.findOne({where: {id: idRecipe}});
                 if(recipe){
-                    return res.json(recipe)
+                    return res.json(restrucutreRecipe(recipe));
                 }
                 return res.status(404).send('Recipe not found')
             }

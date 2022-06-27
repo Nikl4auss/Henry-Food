@@ -25,7 +25,30 @@ async function getDBRecipes(){
     return recipes;
 }
 
+function restrucutreRecipe(recipe){
+    if(recipe.analyzedInstructions?.length){
+        recipe.instructions = recipe.analyzedInstructions[0].steps.map(step => step.step).join('\n');
+    }
+    return {
+        id: recipe.id,
+        title: recipe.title,
+        summary: recipe.summary?.replace(/<\/?.*?>/gi, ''),
+        points: recipe.aggregateLikes,
+        healthScore: recipe.healthScore,
+        instructions: recipe.instructions,
+        image: recipe.image,
+        diets: recipe.diets,
+        dishes: recipe.dishTypes|| recipe.dishes
+    }
+}
+
+function restructureRecipes(recipes){
+    return recipes.map(recipe => restrucutreRecipe(recipe))
+}
+
 module.exports = {
     getApiRecipes,
-    getDBRecipes
+    getDBRecipes,
+    restructureRecipes,
+    restrucutreRecipe
 }
