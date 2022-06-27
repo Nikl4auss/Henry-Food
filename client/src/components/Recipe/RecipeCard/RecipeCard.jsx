@@ -1,12 +1,20 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import {useDispatch} from 'react-redux'
 
+import { getCurrentRecipe } from '../../../redux/recipes/recipesSlice'
 import styles from './RecipeCard.module.css'
 
 function RecipeCard({id, title, image ,diets, dishes}) {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  async function redirectToRecipe() {
+    dispatch(getCurrentRecipe(id))
+    navigate(`/recipe/${id}`)
+  }
   return (
-    <div className={styles.container} onClick={() => navigate(`/recipe/:${id}`)}>
+    <div className={styles.container} onClick={redirectToRecipe}>
         <img className={styles.img} src={image} alt={title}/>
         <p className={styles.title}>{title}</p>
         <p className={styles.info_name}>Diets</p>
