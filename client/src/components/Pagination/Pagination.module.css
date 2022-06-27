@@ -20,6 +20,20 @@
     height: 1.5rem;
 }
 
+.page button {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.2rem;
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.page--selected {
+    font-weight: bold;
+}
+
 .arrow:hover {
     cursor: pointer;
 }
