@@ -22,19 +22,29 @@ function RecipeDetail() {
               <p>Points {recipe.points}</p>
               <p>Health Score {recipe.healthScore}</p>
             </div>
-            <section className={styles.info_group}>
+            {/* <section className={styles.info_group}>
               <p className={styles.info_name}>Diets </p>
               <ul className={styles.info_params}>
                 {recipe.diets.map((diet, inx) => <li className={styles.info_param} key={inx}>{diet}</li>)}
               </ul>
-            </section>
-            <section className={styles.info_group}>
-              <p className={styles.info_name}>Dishes </p>
-              <ul className={styles.info_params}>
-                {recipe.dishes.map((dish, inx) => <li className={styles.info_param} key={inx}>{dish}</li>)}
-              </ul>
-            </section>
-            
+            </section> */}
+            {recipe.diets?.length > 0 && (
+                <section className={styles.info_group}>
+                  <p className={styles.info_name}>Diets </p>
+                  <ul className={styles.info_params}>
+                    {recipe.diets.map((diet, inx) => <li className={styles.info_param} key={inx}>{diet}</li>)}
+                  </ul>
+                </section>
+              )}
+              {recipe.dishes?.length > 0 && (
+                <section className={styles.info_group}>
+                  <p className={styles.info_name}>Dishes </p>
+                  <ul className={styles.info_params}>
+                    {recipe.dishes.map((dish, inx) => <li className={styles.info_param} key={inx}>{dish}</li>)}
+                  </ul>
+                </section>
+              )}
+                        
             <section className={styles.info_group}>
               <h2 className={styles.info_name}>Summary </h2>
               <p className={styles.info_text}>{recipe.summary || 'Summary not found'}</p>
