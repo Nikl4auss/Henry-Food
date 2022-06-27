@@ -1,0 +1,39 @@
+.container {
+    margin: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.pages {
+    display: flex;
+    flex-flow: row wrap;
+    list-style: none;
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+}
+
+.arrow {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.page button {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.2rem;
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.page--selected {
+    font-weight: bold;
+}
+
+.arrow:hover {
+    cursor: pointer;
+}
