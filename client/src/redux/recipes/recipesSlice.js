@@ -32,28 +32,38 @@ export const recipesSlice = createSlice({
             state.recipes.push(action.payload);
         },
         sortRecipes: (state, action) => {
-            state.recipes.sort((recipe1, recipe2) => {
-                if(action.payload === "title"){
-                    return recipe1.title.localeCompare(recipe2.title);
-                }
-                else if(action.payload === "points"){
-                    return recipe1.points - recipe2.points;
-                }
-                else if(action.payload === "healthScore"){
-                    return recipe1.healthScore - recipe2.healthScore;
-                }
-                return 0
-            })
+            console.log('here')
+            if(state.recipes?.length){
+                state.recipes.sort((recipe1, recipe2) => {
+                    if(action.payload === "title"){
+                        return recipe1.title.localeCompare(recipe2.title);
+                    }
+                    else if(action.payload === "points"){
+                        return recipe1.points - recipe2.points;
+                    }
+                    else if(action.payload === "healthScore"){
+                        return recipe1.healthScore - recipe2.healthScore;
+                    }
+                    return 0
+                })
+            }
+            else{
+                state.recipes = [];
+            }
         }
         ,
         setCurrentRecipe: (state, action) => {
             state.currentRecipe = action.payload;
         },
         setDiets: (state, action) => {
-            state.diets = action.payload;
+            if(action.payload?.length){
+                state.diets = action.payload;
+            }
         },
         setDishes: (state, action) => {
-            state.dishes = action.payload;
+            if(action.payload?.length){
+                state.dishes = action.payload;
+            }
         },
         setIsLoading: (state, action) => {
             state.isLoading = action.payload;

@@ -24,27 +24,58 @@ async function getAllRecipes(filters = {}){
     }
     catch(error){
         console.log(error)
+        return []
     }
 }
 
 async function getRecipes(id){
-    const {data} = await axios.get(`${baseUrl}/recipes/${id}`);
-    return data;
+    try{
+        const {data} = await axios.get(`${baseUrl}/recipes/${id}`);
+        return data;
+    }
+    catch(error){
+        console.log(error)
+        return {}
+    }
+}
+
+async function createRecipe(recipe){
+    try{
+        const {data} = await axios.post(`${baseUrl}/recipes`, recipe);
+        return data;
+    }
+    catch(error){
+        console.log(error)
+        return {}
+    }
 }
 
 async function getDiets(){
-    const {data} = await axios.get(`${baseUrl}/types/diets`);
-    return data;
+    try{
+        const {data} = await axios.get(`${baseUrl}/types/diets`);
+        return data;
+    }
+    catch(error){
+        console.log(error)
+        return []
+    }
 }
 
 async function getDishes(){
-    const {data} = await axios.get(`${baseUrl}/types/dishes`);
-    return data;
+    try{
+        const {data} = await axios.get(`${baseUrl}/types/dishes`);
+        return data;
+    }
+    catch(error){
+        console.log(error)
+        return []
+    }
 }
 
 export default {
     getAllRecipes,
     getRecipes,
+    createRecipe,
     getDiets,
-    getDishes
+    getDishes,
 }
