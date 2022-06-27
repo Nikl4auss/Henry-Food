@@ -1,11 +1,10 @@
 import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {useEffect} from 'react'
 
 import {getRecipes, getDiets, getDishes} from '../../redux/recipes/recipesSlice'
 import Recipes from '../Recipes/Recipes'
 import SearchBar from '../SearchBar/SearchBar'
-import Pagination from '../Pagination/Pagination'
 import styles from './Home.module.css'
 function Home() {
   const dispatch = useDispatch()
