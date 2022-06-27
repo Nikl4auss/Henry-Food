@@ -38,7 +38,7 @@ function SearchBar() {
         </div>
 
         <div className={styles.form__filter_container}>
-          <button className={styles.form__filter_button} onClick={() => showFilters ? setShowFilters(false) : setShowFilters(true)}>
+          <button type='button' className={styles.form__filter_button} onClick={() => showFilters ? setShowFilters(false) : setShowFilters(true)}>
             Filter by
             <FilterIcon className={styles.form__filter_icon}/>
           </button>
