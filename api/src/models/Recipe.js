@@ -33,6 +33,7 @@ module.exports = (sequelize) => {
     image:{
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Missing-image-232x150.png',
       validator:{
         isUrl: true
       }
