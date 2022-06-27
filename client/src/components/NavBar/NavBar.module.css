@@ -1,9 +1,9 @@
 .nav {
     position: sticky;
     top: 0;
-    /* z-index: 1; */
     background-color: #CCFF66;
     border-bottom: 1px solid #e5e5e5;
+    z-index: 2;
 }
 
 .nav_list {
