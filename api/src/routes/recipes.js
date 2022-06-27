@@ -1,22 +1,22 @@
 const recipesRouter = require('express').Router();
 const axios = require('axios');
-const { Recipe, Diet } = require('../db');
+const { Recipe, Diet, Dish } = require('../db');
 const { getApiRecipes, getDBRecipes, restructureRecipes, restrucutreRecipe } = require('../utils/recipesUtils');
 const {API_KEY} = require('../utils/config');
 
-const recipes = [];
 
 recipesRouter.get('/', async (req, res) => {
     const queryParams = Object.keys(req.query);
-    console.log("query", req.query)    
+    const recipes = [];
+    
     try {
-        if(recipes.length === 0){
+
         const apiRecipes = await getApiRecipes();
         recipes.push(...apiRecipes);
         const dbRecipes = await getDBRecipes();
         recipes.push(...dbRecipes);
-        }
         let strucutredRecipes = restructureRecipes(recipes);
+        console.log(strucutredRecipes)
         if(queryParams.length){
             strucutredRecipes = strucutredRecipes.filter(recipe => {
                 return queryParams.every(param => {
@@ -49,7 +49,14 @@ recipesRouter.get('/:idRecipe', async (req, res) => {
                 return res.json(restrucutreRecipe(data));
             }
             if(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(idRecipe)){
-                const recipe = await Recipe.findOne({where: {id: idRecipe}});
+                const recipe = await Recipe.findOne(
+                    {where: {id: idRecipe}
+                });
+                console.log(recipe)
+                const diets = await recipe.getDiets();
+                const dishes = await recipe.getDishes();
+                recipe.diets = diets.map(diet => diet.name);
+                recipe.dishes = dishes.map(dish => dish.name);
                 if(recipe){
                     return res.json(restrucutreRecipe(recipe));
                 }
@@ -64,7 +71,7 @@ recipesRouter.get('/:idRecipe', async (req, res) => {
 })
 
 recipesRouter.post('/', async (req, res) => {
-    
+    console.log("req.body", req.body)
     const {title, summary, points, healthScore, instructions,image, diets, dishes} = req.body;
     
     if(!title || !summary) return res.status(400).send('Missing obligatory fields')
@@ -79,12 +86,14 @@ recipesRouter.post('/', async (req, res) => {
         }
         if(dishes){
             await Promise.all(dishes.map(async dish => {
-                const dbDish = await Diet.findOne({where: {name: dish}});
+                const dbDish = await Dish.findOne({where: {name: dish}});
                 await recipe.addDish(dbDish);
             }))
         }
         const recipeDiets = await recipe.getDiets({attributes: ['name'], joinTableAttributes: []})
+        console.log(recipeDiets)
         const recipeDishes = await recipe.getDishes({attributes: ['name'], joinTableAttributes: []})
+        console.log(recipeDishes)
         res.json({...recipe.toJSON(), diets: recipeDiets, dishes: recipeDishes})
         
     } catch (error) {
