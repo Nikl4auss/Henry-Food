@@ -27,6 +27,11 @@ async function getAllRecipes(filters = {}){
     }
 }
 
+async function getRecipes(id){
+    const {data} = await axios.get(`${baseUrl}/recipes/${id}`);
+    return data;
+}
+
 async function getDiets(){
     const {data} = await axios.get(`${baseUrl}/types/diets`);
     return data;
@@ -39,6 +44,7 @@ async function getDishes(){
 
 export default {
     getAllRecipes,
+    getRecipes,
     getDiets,
     getDishes
 }

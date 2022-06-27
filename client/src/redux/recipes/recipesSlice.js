@@ -15,7 +15,8 @@ const initialState = {
         dishes: []
     },
     diets: [],
-    dishes: []
+    dishes: [],
+    isLoading: false,
 
 }
 
@@ -53,25 +54,41 @@ export const recipesSlice = createSlice({
         },
         setDishes: (state, action) => {
             state.dishes = action.payload;
+        },
+        setIsLoading: (state, action) => {
+            state.isLoading = action.payload;
         }
     }
 }) 
 
-export const { setRecipes, addRecipe, sortRecipes,setCurrentRecipe, setDiets, setDishes } = recipesSlice.actions;
+export const { setRecipes, addRecipe, sortRecipes,setCurrentRecipe, setDiets, setDishes, setIsLoading } = recipesSlice.actions;
 
 export function getRecipes(filters = {}) {
     return async dispatch => {
+        dispatch(setIsLoading(true));
+        dispatch(setRecipes([]))
         try {
             const recipes = await recipesServices.getAllRecipes(filters);
             dispatch(setRecipes(recipes));
+            dispatch(setIsLoading(false));
         } catch (error) {
             console.log(error)
         }
     }
 }
 
-export function orderRecipesBy(param){
-
+export function getCurrentRecipe(id) {
+    return async dispatch => {
+        dispatch(setIsLoading(true));
+        dispatch(setCurrentRecipe({}))
+        try {
+            const recipe = await recipesServices.getRecipes(id);
+            dispatch(setCurrentRecipe(recipe));
+            dispatch(setIsLoading(false));
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 export function getDiets(){
